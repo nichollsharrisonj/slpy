@@ -1,0 +1,6 @@
+print("this will compute x * (y // z)")
+x = input("enter value for x: ")
+y = input("enter value for y: ")
+z = input("enter value for z: ")
+answer = x * (y // z)
+print(answer)

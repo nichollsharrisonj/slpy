@@ -1,0 +1,4 @@
+first = input("First thing to print? ")
+second = input("Second thing to print? ")
+third = input("Third thing to print? ")
+print(first, second, third)

@@ -1,0 +1,4 @@
+start = int(input("Starting value? "))
+increment = int(input("Value to increment by? "))
+start += increment
+print(start)

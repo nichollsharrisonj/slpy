@@ -1,0 +1,2 @@
+x = input("What integer do you want to print? ")
+print(x)
