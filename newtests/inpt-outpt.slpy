@@ -1,0 +1,3 @@
+# Test.
+i = int(input("Enter an input.\n"))
+print(i)
