@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <cassert>
 
 #include "slpy-lex.hh"
 #include "slpy-ast.hh"
