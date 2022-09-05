@@ -1,2 +1,1 @@
 print(3 ** input("What power would you like to raise 3 to? "))
-

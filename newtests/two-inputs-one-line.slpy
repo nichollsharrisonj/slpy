@@ -1,2 +1,2 @@
-x = int(input("First number? ")) + int(input("Second number? "))
+x = input("First number? ") + input("Second number? ")
 
