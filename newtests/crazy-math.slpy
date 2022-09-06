@@ -1,6 +1,6 @@
 # Test.
-i1 = int(input("Enter a first number.\n"))
-i2 = int(input("Enter a second number.\n"))
-i3 = int(input("Enter a third number.\n"))
+i1 = input("Enter a first number.\n")
+i2 = input("Enter a second number.\n")
+i3 = input("Enter a third number.\n")
 x = ((i1 + i2) * i3) // i3 - i2 - i1
 print(x)

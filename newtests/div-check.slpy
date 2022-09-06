@@ -1,4 +1,4 @@
-first = int(input("enter numerator: "))
-second = int(input("enter divisor: "))
+first = input("enter numerator: ")
+second = input("enter divisor: ")
 answer = first // second
 print(answer)
