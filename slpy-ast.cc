@@ -178,3 +178,90 @@ void Prgm::run(void) const {
     Ctxt main_ctxt { };
     main->exec(main_ctxt);
 }
+
+
+// Methods for dumping
+
+void Prgm::dump(std::ostream& os) const {
+    dump(os, "");
+}
+
+void Prgm::dump(std::ostream& os, std::string indent) const {
+    os << "Prgm" << std::endl;
+    main->dump(os, "    ");
+}
+
+void Blck::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Blck" << std::endl;
+    indent += "    ";
+    for (Stmt_ptr it : stmts) {
+        it->dump(os, indent);
+    }
+}
+
+// Stmt
+
+void Asgn::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Asgn" << std::endl;
+    indent += "    ";
+    os << indent << name << std::endl;
+    expn->dump(os, indent);
+}
+
+
+void Prnt::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Prnt" << std :: endl;
+    indent += "    ";
+    expn->dump(os,indent);
+    os << std::endl;
+}
+
+
+void Pass::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Pass" << std::endl;
+}
+
+// Expn
+
+void Plus::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Plus" << std:: endl;
+    indent += "    ";
+    left->dump(os, indent);
+    rght->dump(os, indent);
+}
+
+void Mnus::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Mnus" << std:: endl;
+    indent += "    ";
+    left->dump(os, indent);
+    rght->dump(os, indent);
+}
+
+void Tmes::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Tmes" << std:: endl;
+    indent += "    ";
+    left->dump(os, indent);
+    rght->dump(os, indent);
+}
+
+void IDiv::dump(std::ostream& os, std::string indent) const {
+    os << indent << "IDiv" << std:: endl;
+    indent += "    ";
+    left->dump(os, indent);
+    rght->dump(os, indent);
+}
+
+void Nmbr::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Nmbr" << std:: endl;
+    os << indent + "    " << valu << std::endl;
+}
+
+void Lkup::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Lkup" << std::endl;
+    os << indent + "    "<< name << std::endl; 
+}
+
+void Inpt::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Inpt" << std:: endl;
+    os << indent + "    " << "\"" << prpt << "\"" << std::endl;
+}

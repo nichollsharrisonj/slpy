@@ -20,6 +20,13 @@ bool check_pprint(int argc, char** argv) {
     return false;
 }
 
+bool check_dump(int argc, char** argv) {
+    for (int i=1; i<argc; i++) {
+        if (strcmp("--dump",argv[i]) == 0) return true;
+    }
+    return false;
+}
+
 char* check_filename(int argc, char** argv) {
     for (int i=1; i<argc; i++) {
         if (argv[i][0] != '-') return argv[i];
@@ -29,6 +36,7 @@ char* check_filename(int argc, char** argv) {
 int main(int argc, char** argv) {
     bool debug_lex = check_debug_lex(argc,argv);
     bool pprint    = check_pprint(argc,argv);
+    bool dump      = check_dump(argc,argv);
     char* filename = check_filename(argc,argv);
     if (filename) {
         Tokenizer lexer { filename };
@@ -47,6 +55,9 @@ int main(int argc, char** argv) {
         tks.reset();
         Prgm_ptr prgm = parse(tks);
         assert(tks.at_EOF());
+        if (dump) {
+            prgm->dump(std::cout);
+        }
         if (pprint) {
             prgm->output(std::cout);
         } else {

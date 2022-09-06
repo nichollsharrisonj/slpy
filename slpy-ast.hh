@@ -89,6 +89,7 @@ typedef std::vector<Expn_ptr> Expn_vec;
 class AST {
 public:
     virtual void output(std::ostream& os) const = 0;
+    virtual void dump(std::ostream& os, std::string indent) const = 0;
 };
 
 
@@ -116,6 +117,8 @@ public:
     //
     void run(void) const;                 // Execute the program by interpreting its code.
     void output(std::ostream& os) const;  // Output formatted code.
+    void dump(std::ostream& os) const;    // Dump parse tree.
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 //
@@ -144,6 +147,7 @@ public:
     virtual void exec(Ctxt& ctxt) const = 0;
     virtual void output(std::ostream& os, std::string indent) const = 0;
     virtual void output(std::ostream& os) const;
+    virtual void dump(std::ostream& os, std::string indent) const = 0;
 };
 
 class Asgn : public Stmt {
@@ -153,6 +157,7 @@ public:
     Asgn(Name x, Expn_ptr e) : name {x}, expn {e} { }
     void exec(Ctxt& ctxt) const;
     void output(std::ostream& os, std::string indent) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class Prnt : public Stmt {
@@ -161,6 +166,7 @@ public:
     Prnt(Expn_ptr e) : expn {e} { }
     void exec(Ctxt& ctxt) const;
     void output(std::ostream& os, std::string indent) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class Pass : public Stmt {
@@ -168,6 +174,7 @@ public:
     Pass(void) { }
     void exec(Ctxt& ctxt) const;
     void output(std::ostream& os, std::string indent) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 //
@@ -182,6 +189,7 @@ public:
     void exec(Ctxt& ctxt) const;
     void output(std::ostream& os, std::string indent) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 
@@ -208,6 +216,7 @@ public:
 class Expn : public AST {
 public:
     virtual int eval(const Ctxt& ctxt) const = 0;
+    virtual void dump(std::ostream& os, std::string indent) const = 0;
 };
 
 class Plus : public Expn {
@@ -217,6 +226,7 @@ public:
     Plus(Expn_ptr lf, Expn_ptr rg) : left {lf}, rght {rg} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class Mnus : public Expn {
@@ -226,6 +236,7 @@ public:
     Mnus(Expn_ptr lf, Expn_ptr rg) : left {lf}, rght {rg} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class Tmes : public Expn {
@@ -235,6 +246,7 @@ public:
     Tmes(Expn_ptr lf, Expn_ptr rg) : left {lf}, rght {rg} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class IDiv : public Expn {
@@ -244,6 +256,7 @@ public:
     IDiv(Expn_ptr lf, Expn_ptr rg) : left {lf}, rght {rg} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class Nmbr : public Expn {
@@ -252,6 +265,7 @@ public:
     Nmbr(int vl) : valu {vl} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class Lkup : public Expn {
@@ -260,6 +274,7 @@ public:
     Lkup(Name nm) : name {nm} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 class Inpt : public Expn {
@@ -268,6 +283,7 @@ public:
     Inpt(std::string pr) : prpt {pr} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
 };
 
 #endif
