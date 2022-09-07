@@ -1,3 +1,0 @@
-# Test.
-x = 10 // input("Enter a divisor for 10.\n")
-print(x)

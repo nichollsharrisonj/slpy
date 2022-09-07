@@ -604,7 +604,6 @@ TokenStream Tokenizer::lex(void) {
                 case '=':
                 case '+':
                 case '-':
-                case '*':
                 case '(':
                 case ')':
                     start_fresh_token();
@@ -615,6 +614,18 @@ TokenStream Tokenizer::lex(void) {
                     start_fresh_token();
                     consume_char();
                     state = SLSH;
+                    break;
+
+                //
+                // Is it * or **?
+                case '*':
+                    start_fresh_token();
+                    consume_char();
+                    if (curr_char == '*') {
+                        consume_then_issue();
+                    } else {
+                        issue_token();
+                    }
                     break;
                     
                 case -1:
