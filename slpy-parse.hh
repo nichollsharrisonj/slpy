@@ -6,6 +6,7 @@
 #include "slpy-ast.hh"
 
 Expn_ptr parseLeaf(TokenStream& tks);
+Expn_ptr parsePowr(TokenStream& tks);
 Expn_ptr parseMult(TokenStream& tks);
 Expn_ptr parseAddn(TokenStream& tks);
 Expn_ptr parseExpn(TokenStream& tks);

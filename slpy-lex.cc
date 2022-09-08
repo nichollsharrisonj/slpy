@@ -602,10 +602,10 @@ TokenStream Tokenizer::lex(void) {
                 //
                 // Is it a single-character operator or delimiter?
                 case '=':
-                case '+':
                 case '-':
                 case '(':
                 case ')':
+                case ',':
                     start_fresh_token();
                     consume_then_issue(); // => Issue it as a token.
                     break;
@@ -627,7 +627,18 @@ TokenStream Tokenizer::lex(void) {
                         issue_token();
                     }
                     break;
-                    
+
+                // Is it + or +=?
+                case '+':
+                    start_fresh_token();
+                    consume_char();
+                    if (curr_char == '=') {
+                        consume_then_issue();
+                    } else {
+                        issue_token();
+                    }
+                    break;
+
                 case -1:
                 //
                 // Is it the end of the file?

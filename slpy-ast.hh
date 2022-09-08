@@ -36,12 +36,14 @@ class Stmt;
 class Pass;
 class Asgn;
 class Prnt;
+class Updt;
 //
 class Expn;
 class Plus;
 class Mnus;
 class Tmes;
 class IDiv;
+class Powr;
 class Inpt;
 class Lkup;
 class Nmbr;
@@ -56,11 +58,13 @@ typedef std::shared_ptr<Plus> Plus_ptr;
 typedef std::shared_ptr<Mnus> Mnus_ptr; 
 typedef std::shared_ptr<Tmes> Tmes_ptr;
 typedef std::shared_ptr<IDiv> IDiv_ptr;
+typedef std::shared_ptr<Powr> Powr_ptr;
 
 //
 typedef std::shared_ptr<Pass> Pass_ptr; 
 typedef std::shared_ptr<Prnt> Prnt_ptr; 
 typedef std::shared_ptr<Asgn> Asgn_ptr;
+typedef std::shared_ptr<Updt> Updt_ptr;
 //
 typedef std::shared_ptr<Prgm> Prgm_ptr; 
 typedef std::shared_ptr<Blck> Blck_ptr; 
@@ -131,6 +135,7 @@ public:
 //   Asgn - assignment statement "v = e"
 //   Prnt - output statement "print(e1,e2,...,ek)"
 //   Pass - statement that does nothing
+//   Updt - += 
 //
 // These each support the methods:
 //
@@ -162,8 +167,8 @@ public:
 
 class Prnt : public Stmt {
 public:
-    Expn_ptr expn;
-    Prnt(Expn_ptr e) : expn {e} { }
+    Expn_vec expns;
+    Prnt(Expn_vec es) : expns {es} { }
     void exec(Ctxt& ctxt) const;
     void output(std::ostream& os, std::string indent) const;
     void dump(std::ostream& os, std::string indent) const;
@@ -172,6 +177,16 @@ public:
 class Pass : public Stmt {
 public:
     Pass(void) { }
+    void exec(Ctxt& ctxt) const;
+    void output(std::ostream& os, std::string indent) const;
+    void dump(std::ostream& os, std::string indent) const;
+};
+
+class Updt : public Stmt {
+public:
+    Name     name;
+    Expn_ptr expn;
+    Updt(Name n, Expn_ptr e) : name {n}, expn {e} { }
     void exec(Ctxt& ctxt) const;
     void output(std::ostream& os, std::string indent) const;
     void dump(std::ostream& os, std::string indent) const;
@@ -254,6 +269,16 @@ public:
     Expn_ptr left;
     Expn_ptr rght;
     IDiv(Expn_ptr lf, Expn_ptr rg) : left {lf}, rght {rg} { }
+    int eval(const Ctxt& ctxt) const;
+    void output(std::ostream& os) const;
+    void dump(std::ostream& os, std::string indent) const;
+};
+
+class Powr : public Expn {
+public:
+    Expn_ptr left;
+    Expn_ptr rght;
+    Powr(Expn_ptr lf, Expn_ptr rg) : left {lf}, rght {rg} { }
     int eval(const Ctxt& ctxt) const;
     void output(std::ostream& os) const;
     void dump(std::ostream& os, std::string indent) const;

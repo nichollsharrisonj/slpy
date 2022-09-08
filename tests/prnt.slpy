@@ -1,0 +1,6 @@
+x = 1
+x += 3
+print(x)
+print(x, x)
+print(x + x)
+print(x + x, x, x ** x)

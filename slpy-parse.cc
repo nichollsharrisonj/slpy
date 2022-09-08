@@ -74,19 +74,35 @@ Expn_ptr parseLeaf(TokenStream& tks) {
     }
 }
 
-Expn_ptr parseMult(TokenStream& tks) {
+// Added parsePowr
+Expn_ptr parsePowr(TokenStream& tks) {
     //
-    // <mult> ::= <leaf> * <leaf> * ... * <leaf>
+    // <Powr> ::= <leaf> ** <leaf> ** ... ** <leaf> 
     //
     Expn_ptr expn1 = parseLeaf(tks);
+    Expn_ptr expn2;
+    if (tks.at("**")) {
+        tks.eat("**");
+        expn2 = parsePowr(tks);
+        expn1 = std::shared_ptr<Powr> { new Powr {expn1, expn2} };
+    }
+    
+    return expn1;
+}
+
+Expn_ptr parseMult(TokenStream& tks) {
+    //
+    // <mult> ::= <Powr> * <Powr> * ... * <Powr>
+    //
+    Expn_ptr expn1 = parsePowr(tks);
     while (tks.at("*") || tks.at("//")) {
         if (tks.at("*")) {
             tks.eat("*");       
-            Expn_ptr expn2 = parseLeaf(tks);
+            Expn_ptr expn2 = parsePowr(tks);
             expn1 = std::shared_ptr<Tmes> { new Tmes {expn1, expn2} };
         } else {
             tks.eat("//");       
-            Expn_ptr expn2 = parseLeaf(tks);
+            Expn_ptr expn2 = parsePowr(tks);
             expn1 = std::shared_ptr<IDiv> { new IDiv {expn1, expn2} };
         }
     }
@@ -129,10 +145,18 @@ Stmt_ptr parseStmt(TokenStream& tks) {
         //
         tks.eat("print");
         tks.eat("(");
-        Expn_ptr expn = parseExpn(tks);
+        Expn_vec expns;
+        Expn_ptr expn;
+        while (!tks.at(")")) {
+            expn = parseExpn(tks);
+            expns.push_back(expn);
+            if (!tks.at(")")) {
+                tks.eat(",");
+            }
+        }
         tks.eat(")");
 
-        return std::shared_ptr<Prnt> { new Prnt { expn } };
+        return std::shared_ptr<Prnt> { new Prnt { expns } };
 
     } else if (tks.at("pass")) {
 
@@ -147,12 +171,18 @@ Stmt_ptr parseStmt(TokenStream& tks) {
         
         //
         // <stmt> ::= <name> = <expn>
+        //          | <name> += <expn>
         //
         std::string name = tks.eat_name();
-        tks.eat("=");
-        Expn_ptr expn = parseExpn(tks);
-
-        return std::shared_ptr<Asgn> { new Asgn { name, expn } };
+        if (tks.at("=")) {
+            tks.eat("=");
+            Expn_ptr expn = parseExpn(tks);
+            return std::shared_ptr<Asgn> { new Asgn { name, expn } };
+        } else {
+            tks.eat("+=");
+            Expn_ptr expn = parseExpn(tks);
+            return std::shared_ptr<Updt> { new Updt { name, expn } };
+        }
     }
 }
 

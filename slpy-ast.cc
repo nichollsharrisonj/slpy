@@ -48,6 +48,17 @@ void Asgn::exec(Ctxt& ctxt) const {
     ctxt[name] = expn->eval(ctxt);
 }
 
+void Updt::output(std::ostream& os, std::string indent) const {
+    os << indent;
+    os << name << " += ";
+    expn->output(os);
+    os << std::endl;
+}
+
+void Updt::exec(Ctxt& ctxt) const {
+    ctxt[name] += expn->eval(ctxt);
+}
+
 void Pass::output(std::ostream& os, std::string indent) const {
     os << indent << "pass" << std::endl;
 }
@@ -60,13 +71,24 @@ void Prnt::output(std::ostream& os, std::string indent) const {
     os << indent;
     os << "print";
     os << "(";
-    expn->output(os);
+    for (Expn_ptr expn : expns) {
+        expn->output(os);
+        if (expn != expns.back()) {
+            os << ", ";
+        }
+    }
     os << ")";
     os << std::endl;
 }
 
 void Prnt::exec(Ctxt& ctxt) const {
-    std::cout << expn->eval(ctxt) << std::endl;
+    for (Expn_ptr expn : expns) {
+        std::cout << expn->eval(ctxt);
+        if (expn != expns.back()) {
+            std::cout << " ";
+        }
+    }
+    std::cout << std::endl;
 }
 
 void Blck::output(std::ostream& os, std::string indent) const {
@@ -143,6 +165,21 @@ int IDiv::eval(const Ctxt& ctxt) const {
     return (lv / rv);
 }
 
+
+void Powr::output(std::ostream& os) const {
+    os << "(";
+    left->output(os);
+    os << " ** ";
+    rght->output(os);
+    os << ")";
+}
+
+int Powr::eval(const Ctxt& ctxt) const {
+    int lv = left->eval(ctxt);
+    int rv = rght->eval(ctxt);
+    return ((int)(std::pow(lv,rv)));
+}
+
 void Nmbr::output(std::ostream& os) const {
     os << std::to_string(valu);
 }
@@ -212,7 +249,9 @@ void Asgn::dump(std::ostream& os, std::string indent) const {
 void Prnt::dump(std::ostream& os, std::string indent) const {
     os << indent << "Prnt" << std :: endl;
     indent += "    ";
-    expn->dump(os,indent);
+    for (Expn_ptr expn : expns) {
+        expn->dump(os, indent);
+    }
     os << std::endl;
 }
 
@@ -221,6 +260,12 @@ void Pass::dump(std::ostream& os, std::string indent) const {
     os << indent << "Pass" << std::endl;
 }
 
+void Updt::dump(std::ostream & os, std::string indent) const {
+    os << indent << "Updt" << std::endl;
+    indent += "    ";
+    os << indent << name << std::endl;
+    expn->dump(os,indent);
+}
 // Expn
 
 void Plus::dump(std::ostream& os, std::string indent) const {
@@ -246,6 +291,13 @@ void Tmes::dump(std::ostream& os, std::string indent) const {
 
 void IDiv::dump(std::ostream& os, std::string indent) const {
     os << indent << "IDiv" << std:: endl;
+    indent += "    ";
+    left->dump(os, indent);
+    rght->dump(os, indent);
+}
+
+void Powr::dump(std::ostream& os, std::string indent) const {
+    os << indent << "Powr" << std:: endl;
     indent += "    ";
     left->dump(os, indent);
     rght->dump(os, indent);
